@@ -33,10 +33,8 @@ public class CandidateController {
         try {
             var token = this.candidateService.login ( username , password );
 
-            System.out.println ( token );
-
             var grants = token.getRoles ( ).stream ( )
-                    .map ( role -> new SimpleGrantedAuthority ( "ROLE_" + role.toString ().toUpperCase ( ) ) ).toList ( );
+                    .map ( role -> new SimpleGrantedAuthority ( "ROLE_" + role.toUpperCase ( ) ) ).toList ( );
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken ( null , null , grants );
             auth.setDetails ( token.getAccess_token ( ) );
             SecurityContextHolder.getContext ( ).setAuthentication ( auth );
