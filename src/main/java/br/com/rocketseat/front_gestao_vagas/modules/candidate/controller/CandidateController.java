@@ -1,5 +1,6 @@
 package br.com.rocketseat.front_gestao_vagas.modules.candidate.controller;
 
+import br.com.rocketseat.front_gestao_vagas.modules.candidate.dto.CreateCandidateDTO;
 import br.com.rocketseat.front_gestao_vagas.modules.candidate.service.ApplyJobService;
 import br.com.rocketseat.front_gestao_vagas.modules.candidate.service.CandidateService;
 import br.com.rocketseat.front_gestao_vagas.modules.candidate.service.FindJobsService;
@@ -42,11 +43,6 @@ public class CandidateController {
     @GetMapping ( "/login" )
     public String login ( ) {
         return "candidate/login";
-    }
-
-    @GetMapping ( "/create" )
-    public String create ( ) {
-        return "candidate/create";
     }
 
     @PostMapping ( "/signIn" )
@@ -106,6 +102,19 @@ public class CandidateController {
     public String applyJob ( @RequestParam ( "jobId" ) UUID jobId ) {
         this.applyJobService.execute ( getToken ( ) , jobId );
         return "redirect:/candidate/jobs";
+    }
+
+    @GetMapping ( "/create" )
+    public String create ( Model model ) {
+        model.addAttribute ( "candidate" , new CreateCandidateDTO ( ) );
+        return "candidate/create";
+    }
+
+    @PostMapping ( "/create" )
+    public String save ( CreateCandidateDTO candidate , Model model ) {
+        System.out.println ( candidate.getName ( ) );
+        model.addAttribute ( "candidate" , candidate );
+        return "candidate/create";
     }
 
     private String getToken ( ) {
