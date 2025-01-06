@@ -1,4 +1,4 @@
-package br.com.rocketseat.front_gestao_vagas.company.dto;
+package br.com.rocketseat.front_gestao_vagas.modules.company.dto;
 
 import lombok.Data;
 
