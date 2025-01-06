@@ -6,6 +6,7 @@ import br.com.rocketseat.front_gestao_vagas.modules.company.service.LoginCompany
 import br.com.rocketseat.front_gestao_vagas.utils.FormatErrorMessage;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -69,5 +70,11 @@ public class CompanyController {
             redirectAttributes.addFlashAttribute ( "error_message" , "Usuário/Senha incorretos" );
             return "redirect:/company/jobs";
         }
+    }
+
+    @GetMapping ( "/jobs" )
+    @PreAuthorize ( "hasRoles('COMPANY')" )
+    public String jobs ( ) {
+        return "company/jobs";
     }
 }
