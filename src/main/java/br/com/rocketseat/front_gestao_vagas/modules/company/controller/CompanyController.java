@@ -106,7 +106,6 @@ public class CompanyController {
     public String list ( Model model ) {
         var result = this.listAllJobsCompanyService.execute ( getToken ( ) );
         model.addAttribute ( "jobs" , result );
-        System.out.println ( result );
         return "company/list";
     }
 

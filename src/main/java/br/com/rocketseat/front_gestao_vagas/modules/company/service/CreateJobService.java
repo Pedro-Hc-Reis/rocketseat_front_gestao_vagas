@@ -18,10 +18,6 @@ public class CreateJobService {
 
         HttpEntity<CreateJobsDTO> request = new HttpEntity<> ( jobs , headers );
 
-        var result = rt.postForObject ( "http://localhost:8080/company/job/" , request , String.class );
-
-        System.out.println ( result );
-
-        return result;
+        return rt.postForObject ( "http://localhost:8080/company/job/" , request , String.class );
     }
 }
