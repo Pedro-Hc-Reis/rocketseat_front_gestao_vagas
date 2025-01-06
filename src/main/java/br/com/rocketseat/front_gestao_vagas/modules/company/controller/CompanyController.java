@@ -64,18 +64,23 @@ public class CompanyController {
 
     @PostMapping ( "/signIn" )
     public String signIn ( RedirectAttributes redirectAttributes , HttpSession session , String username , String password ) {
+
         try {
             var token = this.loginCompanyService.execute ( username , password );
 
             var grants = token.getRoles ( ).stream ( )
                     .map ( role -> new SimpleGrantedAuthority ( "ROLE_" + role.toUpperCase ( ) ) ).toList ( );
+
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken ( null , null , grants );
             auth.setDetails ( token.getAccess_token ( ) );
+
             SecurityContextHolder.getContext ( ).setAuthentication ( auth );
             SecurityContext securityContext = SecurityContextHolder.getContext ( );
             session.setAttribute ( "SPRING_SECURITY_CONTEXT" , securityContext );
             session.setAttribute ( "token" , token );
+
             return "redirect:/company/jobs";
+
         } catch (HttpClientErrorException e) {
             redirectAttributes.addFlashAttribute ( "error_message" , "Usuário/Senha incorretos" );
             return "redirect:/company/jobs";
@@ -83,11 +88,9 @@ public class CompanyController {
     }
 
     @GetMapping ( "/jobs" )
-    @PreAuthorize ( "hasRoles('COMPANY')" )
+    @PreAuthorize ( "hasRole('COMPANY')" )
     public String jobs ( Model model ) {
-        var result = this.listAllJobsCompanyService.execute ( getToken ( ) );
-        model.addAttribute ( "jobs" , result );
-        System.out.println ( result );
+        model.addAttribute ( "jobs" , new CreateJobsDTO ( ) );
         return "company/jobs";
     }
 
@@ -95,13 +98,15 @@ public class CompanyController {
     @PreAuthorize ( "hasRole('COMPANY')" )
     public String createJobs ( CreateJobsDTO jobs ) {
         var result = this.createJobService.execute ( jobs , getToken ( ) );
-        return "redirect:/company/jobs";
+        return "redirect:/company/jobs/list";
     }
 
     @GetMapping ( "/jobs/list" )
     @PreAuthorize ( "hasRole('COMPANY')" )
     public String list ( Model model ) {
-        //model.addAttribute("jobs", new CreateJobsDTO());
+        var result = this.listAllJobsCompanyService.execute ( getToken ( ) );
+        model.addAttribute ( "jobs" , result );
+        System.out.println ( result );
         return "company/list";
     }
 
